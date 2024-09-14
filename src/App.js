@@ -38,7 +38,7 @@ const Hero = () => {
 
   return (
     <section className="hero">
-      <h1>Revolutionize Your Music Learning</h1>
+      <h1>Revolutionize Your Learning Through Music</h1>
       <p>Meet MusicAI, the intelligent music tutor that helps you create songs based on any topic.</p>
 
       {/* Search Bar */}
@@ -58,7 +58,7 @@ const Hero = () => {
 
 const Features = () => (
   <section id="features" className="features">
-    <h2>Why MusicAI?</h2>
+    <h2>Why TuneTutors?</h2>
     <div className="feature-list">
       <div className="feature-item">
         <h3>Personalized Learning</h3>
@@ -78,7 +78,7 @@ const Features = () => (
 
 const Footer = () => (
   <footer className="footer">
-    <p>&copy; 2024 TuneTutors | Empowering musicians through AI</p>
+    <p>&copy; 2024 TuneTutors | Empowering education through AI</p>
     <ul className="footer-links">
       <li><a href="#terms">Terms of Service</a></li>
       <li><a href="#privacy">Privacy Policy</a></li>
