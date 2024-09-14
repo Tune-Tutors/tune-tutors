@@ -17,7 +17,7 @@ function App() {
 
 const Navbar = () => (
   <nav className="navbar">
-    <div className="logo">MusicAI</div>
+    <div className="logo">TuneTutors</div>
     <ul className="nav-links">
       <li><a href="#features">Features</a></li>
       <li><a href="#about">About Us</a></li>
