@@ -1,14 +1,38 @@
 /* App.css */
+
+/* Reset margins and padding */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
+/* Set body and html to full height to fit the canvas */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
   font-family: 'Arial', sans-serif;
 }
 
+/* Background canvas setup */
+.background-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1; /* This keeps the canvas behind other content */
+  width: 100%;
+  height: 100%;
+}
+
+/* Main App container, ensure content appears over the canvas */
+.App {
+  position: relative;
+  z-index: 1;
+}
+
+/* Navbar styles */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -36,9 +60,10 @@ body {
   text-decoration: none;
 }
 
+/* Hero section */
 .hero {
   text-align: center;
-  /* background: url('your-music-image-url.jpg') center/cover no-repeat; */
+  background: transparent; /* Ensure the hero background remains transparent to show the notes */
   color: white;
   padding: 5rem 0;
 }
@@ -53,9 +78,10 @@ body {
   cursor: pointer;
 }
 
+/* Features section */
 .features {
   padding: 3rem 2rem;
-  background-color: #f5f5f5;
+  background-color: rgba(255, 255, 255, 0.9); /* Make background slightly transparent */
   text-align: center;
 }
 
@@ -73,6 +99,7 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Footer section */
 .footer {
   text-align: center;
   padding: 2rem;

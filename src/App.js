@@ -1,10 +1,12 @@
 // App.js
-import React from 'react';
-import './App.css'; // You can create your own styles
+import React, { useState } from 'react';
+import './App.css'; // Your existing styles
+import BackgroundCanvas from './BackgroundCanvas';
 
 function App() {
   return (
     <div className="App">
+      <BackgroundCanvas />
       <Navbar />
       <Hero />
       <Features />
@@ -24,13 +26,35 @@ const Navbar = () => (
   </nav>
 );
 
-const Hero = () => (
-  <section className="hero">
-    <h1>Revolutionize Your Music Learning</h1>
-    <p>Meet MusicAI, the intelligent music tutor that adapts to your unique learning style.</p>
-    <button className="cta-btn">Start Learning</button>
-  </section>
-);
+const Hero = () => {
+  const [songTopic, setSongTopic] = useState('');
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    // Logic for handling the input topic and song generation can go here
+    alert(`Creating a song about: ${songTopic}`);
+    //Pass on SongTopic to Suno
+  };
+
+  return (
+    <section className="hero">
+      <h1>Revolutionize Your Music Learning</h1>
+      <p>Meet MusicAI, the intelligent music tutor that helps you create songs based on any topic.</p>
+
+      {/* Search Bar */}
+      <form onSubmit={handleSearch}>
+        <input
+          type="text"
+          placeholder="Enter a topic to create a song"
+          value={songTopic}
+          onChange={(e) => setSongTopic(e.target.value)}
+          className="search-input"
+        />
+        <button type="submit" className="search-btn">Create Song</button>
+      </form>
+    </section>
+  );
+};
 
 const Features = () => (
   <section id="features" className="features">
