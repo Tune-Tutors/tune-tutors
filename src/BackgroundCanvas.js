@@ -1,5 +1,6 @@
 // BackgroundCanvas.js
-import React, { useRef, useEffect } from 'react';
+const React = require('react');
+const { useRef, useEffect } = React;
 
 const BackgroundCanvas = () => {
   const canvasRef = useRef(null);

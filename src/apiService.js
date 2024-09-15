@@ -1,66 +1,60 @@
 // apiService.js
-//const axios = require('axios');
 import axios from 'axios';
-const React = require('react');
-const { useRef, useEffect } = React;
 
-const apiService = async (songTopic)=>{
-    axios.post('https://studio-api.suno.ai/api/external/generate/', 
-        {
-          topic: songTopic,
-          tags: "pop"
-        }, 
-        {
-          headers: {
-            'accept-language': 'en-US,en;q=0.9',
-            'authorization': 'Bearer vZ2kwEe9VMsbD8y42h7j67WYtAfmvW1n',
-            'content-type': 'text/plain;charset=UTF-8',
-          }
-        }
-      )
-    .then(async (response) => {
-        console.log(response);
-        await new Promise(r => setTimeout(r, 3000));        
-        const url = `https://studio-api.suno.ai/api/external/clips/`;
-        const token = 'vZ2kwEe9VMsbD8y42h7j67WYtAfmvW1n';
-        const clip_id= response.data.id;
-      axios.get(url, 
-        {params: { 
-
-        ids: clip_id },
+const apiService = async (songTopic) => {
+  try {
+    // Make the POST request to generate the song
+    const postResponse = await axios.post(
+      'https://studio-api.suno.ai/api/external/generate/',
+      {
+        topic: `a song that teaches ${songTopic} that is solely focused on education, and has as many words as possible`,
+        tags: 'pop',
+      },
+      {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          //'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-          //'Accept': 'application/json'
-        }
-    })
-      .then(async(response) => {
-        console.log(response);   
-        let status= response.data[0].status;
-        while(status!= "complete"){
-            response= await axios.get(url, 
-                {params: { 
-        
-                ids: clip_id },
-                headers: {
-                  'Authorization': `Bearer ${token}`,
-                  //'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-                  //'Accept': 'application/json'
-                }
-            })
-            status= response.data[0].status;
-            await new Promise(r => setTimeout(r, 3000)); 
-            console.log(response);       
-        }
-        console.log(response.data[0].audio_url);
-        const audio_url=response.data[0].audio_url;
-        return audio_url;
-      })
-      
-    })
-    
-    };
+          'accept-language': 'en-US,en;q=0.9',
+          authorization: 'Bearer vZ2kwEe9VMsbD8y42h7j67WYtAfmvW1n',
+          'content-type': 'text/plain;charset=UTF-8',
+        },
+      }
+    );
 
-//module.exports = apiService;
+    console.log('Post Response:', postResponse.data);
+
+    const url = 'https://studio-api.suno.ai/api/external/clips/';
+    const token = 'vZ2kwEe9VMsbD8y42h7j67WYtAfmvW1n';
+    const clip_id = postResponse.data.id;
+
+    // Poll the GET endpoint until the status is "complete"
+    let status = '';
+    let getResponse = null;
+
+    do {
+      // Wait a bit before each poll to avoid overwhelming the server
+      await new Promise((r) => setTimeout(r, 3000)); // Wait 1 second between polls
+
+      // Get the clip data
+      getResponse = await axios.get(url, {
+        params: { ids: clip_id },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log('Get Response:', getResponse.data);
+
+      status = getResponse.data[0]?.status;
+    } while (status !== 'complete');
+
+    const clipData = getResponse.data[0];
+    console.log('Clip Data:', clipData);
+
+    // Return the url and lyrics
+    return { url: clipData.audio_url, lyrics: clipData.metadata.prompt };
+  } catch (error) {
+    console.error('Error in apiService:', error);
+    throw error; // Re-throw the error to be handled by the caller
+  }
+};
+
 export default apiService;
-

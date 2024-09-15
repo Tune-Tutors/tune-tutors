@@ -64,3 +64,173 @@
         background-position: 0% 0%;
     }
 }
+
+/* SearchPage.css */
+
+/* Existing styles... */
+
+/* New styles for the loading screen */
+.loading-screen {
+    background: linear-gradient(135deg, #eeb0d5, #db8bbb, #db71b1);
+    background-size: 200% 200%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    animation: gradientShift 10s ease infinite;
+    font-size: 2rem;
+}
+
+/* New styles for the song screen */
+.song-screen {
+    background: linear-gradient(135deg, #eeb0d5, #db8bbb, #db71b1);
+    background-size: 200% 200%;
+    min-height: 100vh;
+    padding: 2rem;
+    color: white;
+    animation: gradientShift 10s ease infinite;
+}
+
+.song-screen audio {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+    display: block;
+}
+
+.toggle-blanks-btn {
+    background-color: #ffffff;
+    color: #333;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-bottom: 2rem;
+}
+
+.toggle-blanks-btn:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+}
+
+.lyrics-display {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.lyrics-display p {
+    margin-bottom: 1rem;
+    transition: color 0.3s ease;
+}
+
+.current-line {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.dimmed-line {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.blank-input {
+    width: 100px;
+    padding: 5px;
+    font-size: 1rem;
+    margin-right: 5px;
+    border: none;
+    border-bottom: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+}
+
+.blank-input.correct {
+    border-bottom-color: #a8e6cf;
+}
+
+.blank-input.incorrect {
+    border-bottom-color: #ff8b94;
+}
+
+.blank-input.correct {
+    border-bottom-color: #a8e6cf; /* Green */
+  }
+  
+  .blank-input.incorrect {
+    border-bottom-color: #ff8b94; /* Red */
+  }
+
+/* Styles for word-level synchronization */
+.dimmed-word {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .current-word {
+    font-weight: bold;
+    color: #fff;
+  }
+  
+  /* Styles for the blank inputs */
+  .blank-input {
+    width: 80px;
+    padding: 5px;
+    font-size: 1rem;
+    margin-right: 5px;
+    border: none;
+    border-bottom: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+    outline: none;
+    transition: border-bottom-color 0.3s ease;
+  }
+  
+  .blank-input.correct {
+    border-bottom-color: #a8e6cf; /* Green */
+  }
+  
+  .blank-input.incorrect {
+    border-bottom-color: #ff8b94; /* Red */
+  }
+  
+  /* SearchPage.css */
+
+/* Existing styles */
+
+/* Styles for current and dimmed lines */
+.current-line {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+  }
+  
+  .dimmed-line {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  /* Styles for the blank inputs */
+  .blank-input {
+    width: 80px;
+    padding: 5px;
+    font-size: 1rem;
+    margin-right: 5px;
+    border: none;
+    border-bottom: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+    outline: none;
+    transition: border-bottom-color 0.3s ease;
+  }
+  
+  .blank-input.correct {
+    border-bottom-color: #a8e6cf; /* Green */
+  }
+  
+  .blank-input.incorrect {
+    border-bottom-color: #ff8b94; /* Red */
+  }
+  
