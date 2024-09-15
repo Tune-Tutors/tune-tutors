@@ -121,7 +121,6 @@ function Layout() {
   );
 }
 
-
 // Navbar Component
 const Navbar = () => {
   const [menuActive, setMenuActive] = useState(false);
@@ -132,7 +131,9 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <div className="logo">TuneTutor</div>
+      <div className="logo">
+        <Link to="/">TuneTutor</Link>
+      </div>
       <div className="menu-icon" onClick={toggleMenu}>
         &#9776;
       </div>
@@ -196,7 +197,6 @@ const Hero = () => (
   </section>
 );
 
-
 // Features Component
 const Features = () => (
   <section id="features" className="features">
@@ -238,7 +238,6 @@ const Footer = () => (
   </footer>
 );
 
-
 const SearchPage = ({ subject }) => {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
@@ -248,6 +247,8 @@ const SearchPage = ({ subject }) => {
   const [category, setCategory] = useState(subject || "Math");
   const [allBlanksFilled, setAllBlanksFilled] = useState(false);
   const audioRef = useRef(null);
+
+  const numLinesToShow = 2; // Number of lines to show at a time
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -288,6 +289,7 @@ const SearchPage = ({ subject }) => {
         isBlank: indices.includes(idx),
         userInput: "",
         isCorrect: null, // To track correctness
+        attempts: 0, // Initialize attempts
       }));
       return { text: line, words: newWords };
     });
@@ -318,9 +320,27 @@ const SearchPage = ({ subject }) => {
         // Move to the next blank
         moveToNextBlank(lineIndex, wordIndex);
       } else {
-        wordObj.isCorrect = false;
+        wordObj.attempts += 1; // Increment attempts
+        wordObj.isCorrect = false; // To trigger incorrect styling
+        if (wordObj.attempts >= 2) {
+          // Reveal the correct word
+          wordObj.userInput = wordObj.word;
+          wordObj.isCorrect = true; // Mark as correct to prevent further editing
+          moveToNextBlank(lineIndex, wordIndex);
+        }
       }
       setSongData({ ...songData });
+
+      // Check if all blanks in the current line are filled or attempts exhausted
+      const currentLine = songData.lyrics[lineIndex];
+      const allBlanksInLineFilled = currentLine.words.every(
+        (word) =>
+          !word.isBlank || word.isCorrect === true || word.attempts >= 2
+      );
+      if (allBlanksInLineFilled) {
+        // Move to the next line
+        setCurrentLineIndex((prevIndex) => prevIndex + 1);
+      }
     }
   };
 
@@ -331,25 +351,25 @@ const SearchPage = ({ subject }) => {
     // Find the next blank in the current line
     while (
       nextWordIndex < songData.lyrics[nextLineIndex].words.length &&
-      !songData.lyrics[nextLineIndex].words[nextWordIndex].isBlank
+      (!songData.lyrics[nextLineIndex].words[nextWordIndex].isBlank ||
+        songData.lyrics[nextLineIndex].words[nextWordIndex].isCorrect === true)
     ) {
       nextWordIndex++;
     }
 
-    // If no more blanks in current line, move to the next line
-    while (
-      nextWordIndex >= songData.lyrics[nextLineIndex].words.length &&
-      nextLineIndex < songData.lyrics.length - 1
-    ) {
-      nextLineIndex++;
-      nextWordIndex = 0;
-      // Find the next blank in the new line
-      while (
-        nextWordIndex < songData.lyrics[nextLineIndex].words.length &&
-        !songData.lyrics[nextLineIndex].words[nextWordIndex].isBlank
-      ) {
-        nextWordIndex++;
+    // If no more blanks in current line
+    if (nextWordIndex >= songData.lyrics[nextLineIndex].words.length) {
+      // Check if all blanks are filled in the current line
+      const currentLine = songData.lyrics[currentLineIndex];
+      const allBlanksInLineFilled = currentLine.words.every(
+        (word) =>
+          !word.isBlank || word.isCorrect === true || word.attempts >= 2
+      );
+      if (allBlanksInLineFilled) {
+        // Move to the next line
+        setCurrentLineIndex((prevIndex) => prevIndex + 1);
       }
+      return;
     }
 
     // If a next blank is found, focus on it
@@ -357,7 +377,7 @@ const SearchPage = ({ subject }) => {
       nextLineIndex < songData.lyrics.length &&
       nextWordIndex < songData.lyrics[nextLineIndex].words.length &&
       songData.lyrics[nextLineIndex].words[nextWordIndex].isBlank &&
-      !songData.lyrics[nextLineIndex].words[nextWordIndex].isCorrect
+      songData.lyrics[nextLineIndex].words[nextWordIndex].isCorrect !== true
     ) {
       // Focus on the next input
       const inputId = `input-${nextLineIndex}-${nextWordIndex}`;
@@ -366,8 +386,16 @@ const SearchPage = ({ subject }) => {
         nextInput.focus();
       }
     } else {
-      // All blanks are filled
-      setAllBlanksFilled(true);
+      // Check if all blanks are filled or attempts are exhausted
+      const allFilled = songData.lyrics.every((line) =>
+        line.words.every(
+          (word) =>
+            !word.isBlank || word.isCorrect === true || word.attempts >= 2
+        )
+      );
+      if (allFilled) {
+        setAllBlanksFilled(true);
+      }
     }
   };
 
@@ -427,7 +455,8 @@ const SearchPage = ({ subject }) => {
     return <div className="loading-screen">Loading...</div>;
   }
 
-  if (allBlanksFilled) {
+  // **Add a check to ensure songData is not null before accessing songData.lyrics**
+  if (songData && (allBlanksFilled || currentLineIndex >= songData.lyrics.length)) {
     return (
       <div className="song-screen">
         <h2>Congratulations! You've completed the song.</h2>
@@ -447,17 +476,20 @@ const SearchPage = ({ subject }) => {
         </button>
         <div className="lyrics-display">
           {songData.lyrics.map((line, index) => {
-            // Show only previous lines (dimmed), current line, and next line
-            if (index < currentLineIndex - 1 || index > currentLineIndex + 1) {
+            // Only show lines from currentLineIndex to currentLineIndex + numLinesToShow - 1
+            if (
+              index < currentLineIndex ||
+              index > currentLineIndex + numLinesToShow - 1
+            ) {
               return null;
             }
 
             const isCurrentLine = index === currentLineIndex;
-            const isPreviousLine = index < currentLineIndex;
+            const isNextLine = index === currentLineIndex + 1;
             const lineClass = isCurrentLine
               ? "current-line"
-              : isPreviousLine
-              ? "dimmed-line"
+              : isNextLine
+              ? "next-line"
               : "";
 
             return (
@@ -465,6 +497,14 @@ const SearchPage = ({ subject }) => {
                 {line.words.map((wordObj, wordIdx) => {
                   if (showBlanks && wordObj.isBlank) {
                     if (isCurrentLine) {
+                      if (wordObj.attempts >= 2) {
+                        // After two wrong attempts, display the correct word
+                        return (
+                          <span key={wordIdx} className="missed-word">
+                            {wordObj.word}{" "}
+                          </span>
+                        );
+                      }
                       return (
                         <input
                           type="text"
@@ -562,6 +602,7 @@ const SearchPage = ({ subject }) => {
     </div>
   );
 };
+
 
 
 const SearchPageWrapper = () => {

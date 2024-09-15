@@ -744,3 +744,22 @@ html {
   border-color: #dc3545; /* Red border for incorrect answer */
   background-color: #f8d7da; /* Light red background */
 }
+
+a {
+  text-decoration:none;
+  text-decoration:none;
+  color:inherit;
+}
+
+.missed-word {
+  color: red;
+  text-decoration: line-through;
+}
+
+.incorrect {
+  border-color: red;
+}
+
+.correct {
+  border-color: green;
+}
