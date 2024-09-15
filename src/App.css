@@ -1,92 +1,434 @@
 /* App.css */
 
-.App {
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
   font-family: "Roboto", sans-serif;
   color: #333;
+  background-color: #f9f9f9;
 }
 
 /* Navbar Styling */
 .navbar {
-  background-color: #000000;
-  color: white;
-  padding: 1rem;
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  padding: 0.8rem 2rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid #eaeaea;
+  z-index: 100;
 }
 
-.navbar .logo {
-  font-size: 1.5rem;
+.logo {
+  font-size: 1.8rem;
   font-weight: bold;
+  color: #db71b1;
 }
 
 .nav-links {
-  list-style: none;
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  list-style: none;
+  margin-left: auto;
 }
 
 .nav-links li {
-  display: inline;
+  margin-left: 2rem;
 }
 
 .nav-links a {
-  color: white;
+  color: #333;
   text-decoration: none;
   font-weight: 500;
+  position: relative;
+  padding: 0.5rem 0;
+  transition: color 0.3s ease;
+}
+
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  background-color: #db71b1;
+  left: 0;
+  bottom: 0;
+  transition: width 0.3s ease;
 }
 
 .nav-links a:hover {
   color: #db71b1;
-  transition: color 0.2s;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Hamburger Menu Icon */
+.menu-icon {
+  display: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+/* User Button */
+.user-button {
+  margin-left: 1rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+/* Auth Links */
+.auth-links {
+  margin-left: 1rem;
+}
+
+.auth-link {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border: 1px solid #db71b1;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.auth-link:hover {
+  background-color: #db71b1;
+  color: #fff;
 }
 
 /* Hero Section Styling */
 .hero {
   background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
-  padding: 50px;
+  padding: 100px 20px;
   text-align: center;
-  border-radius: 8px;
 }
 
 .hero h1 {
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin-bottom: 1rem;
+  color: #333;
 }
 
 .hero p {
   font-size: 1.2rem;
   margin-bottom: 2rem;
+  color: #555;
 }
 
 .navigate-btn {
-  background-color: #bc5091;
+  background-color: #db71b1;
   color: white;
-  padding: 20px 30px;
-  border-radius: 10px;
+  padding: 15px 30px;
+  border-radius: 50px;
   text-decoration: none;
-  font-size: 1.5em;
-  transition: background-color 0.3s ease;
-  display: inline-block;
+  font-size: 1.2rem;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .navigate-btn:hover {
-  background-color: #e8afd1;
-  transform: scale(1.05);
+  background-color: #bf5c9b;
+  transform: translateY(-3px);
 }
 
 /* Features Section Styling */
 .features {
-  background: linear-gradient(
-    135deg,
-    #eeb0d5,
-    #db8bbb,
-    #db71b1
-  ); /* Gradient colors */
-  background-size: 600% 600%; /* Ensures a smooth gradient transition */
-  padding: 40px 20px;
-  margin-top: 20px;
-  animation: gradientShift 5s ease infinite; /* Animation for the gradient */
+  padding: 60px 20px;
+  background-color: #fff;
+}
+
+.features h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: #333;
+}
+
+/* Feature List Container */
+.feature-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+
+/* Feature Item Styling */
+.feature-item {
+  flex: 1 1 300px;
+  max-width: 300px;
+  background-color: #fafafa;
+  border-radius: 8px;
+  padding: 30px 20px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.feature-item h3 {
+  margin-bottom: 1rem;
+  color: #db71b1;
+  font-size: 1.5rem;
+}
+
+.feature-item p {
+  color: #555;
+}
+
+/* Footer Styling */
+.footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.footer p {
+  margin-bottom: 1rem;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  display: inline-flex;
+}
+
+.footer-links li {
+  margin: 0 1rem;
+}
+
+.footer-links a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #db71b1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .nav-links {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    width: 250px;
+    background-color: #ffffff;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 4rem;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 99;
+  }
+
+  .nav-links.active {
+    transform: translateX(0%);
+  }
+
+  .nav-links li {
+    margin: 1.5rem 0;
+    width: 100%;
+  }
+
+  .nav-links a {
+    padding: 0.5rem 2rem;
+    width: 100%;
+  }
+
+  .menu-icon {
+    display: block;
+  }
+
+  .user-button,
+  .auth-links {
+    display: none;
+  }
+}
+
+/* Background Canvas Styling */
+.background-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* Clerk Component Overrides */
+:root {
+  --clerk-font-family: "Roboto", sans-serif;
+  --clerk-color-primary: #db71b1;
+  --clerk-color-text: #333;
+  --clerk-border-radius: 8px;
+}
+
+.clerk-signin .cl-main {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.clerk-signin .cl-card {
+  border: none !important;
+  background-color: transparent !important;
+}
+
+.clerk-signin .cl-form-button-primary {
+  background-color: #db71b1 !important;
+  border-radius: 50px !important;
+}
+
+.clerk-signin .cl-form-button-primary:hover {
+  background-color: #bf5c9b !important;
+}
+
+.clerk-signin .cl-form-field input {
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 4px !important;
+}
+
+.clerk-signin .cl-header-title {
+  font-size: 2rem !important;
+  color: #333 !important;
+}
+
+.clerk-signin .cl-link {
+  color: #db71b1 !important;
+}
+
+.clerk-signin .cl-link:hover {
+  color: #bf5c9b !important;
+}
+
+/* Layout Container */
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* App.css */
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+/* Navbar Styling */
+/* ... (existing styles from previous App.css) */
+
+/* Hero Section Styling */
+/* ... (existing styles from previous App.css) */
+
+/* Features Section Styling */
+/* ... (existing styles from previous App.css) */
+
+/* Footer Styling */
+/* ... (existing styles from previous App.css) */
+
+/* Responsive Design */
+/* ... (existing styles from previous App.css) */
+
+/* Background Canvas Styling */
+/* ... (existing styles from previous App.css) */
+
+/* Clerk Component Overrides */
+/* ... (existing styles from previous App.css) */
+
+/* Layout Container */
+/* ... (existing styles from previous App.css) */
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Search Page Styles */
+.search-page {
+  background: linear-gradient(135deg, #eeb0d5, #db8bbb, #db71b1);
+  background-size: 200% 200%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  color: white;
+  animation: gradientShift 10s ease infinite;
+}
+
+.search-page h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.search-input {
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  color: #333;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.search-btn {
+  background-color: #ffffff;
+  color: #333;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.search-btn:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.05);
 }
 
 @keyframes gradientShift {
@@ -101,77 +443,94 @@
   }
 }
 
-.features h2 {
-  text-align: center;
-  font-size: xx-large;
-  margin-bottom: 1.5rem;
-}
-
-/* Feature List Container */
-.feature-list {
+/* Loading Screen Styles */
+.loading-screen {
+  background: linear-gradient(135deg, #eeb0d5, #db8bbb, #db71b1);
+  background-size: 200% 200%;
+  height: 100vh;
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-}
-
-/* Feature Item Styling */
-.feature-item {
-  width: 300px;
-  margin: 20px 0;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 20px;
-  background-color: white;
-  overflow: hidden; /* Prevent text overflow from breaking the layout */
-}
-
-.feature-item h3 {
-  margin-bottom: 0.5rem;
-}
-
-/* Footer Styling */
-.footer {
-  background-color: #000000;
-  color: white;
-  text-align: center;
-  padding: 1rem;
-  margin-top: 2rem;
-}
-
-.footer-links {
-  list-style: none;
-  padding: 0;
-}
-
-.footer-links li {
-  display: inline;
-  margin: 0 0.5rem;
-}
-
-.footer-links a {
-  color: white;
-  text-decoration: none;
-}
-
-.footer-links a:hover {
-  color: #db71b1;
-  transition: color 0.2s;
-}
-
-.layout-container {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* Full viewport height */
-  width: 100vw; /* Full viewport width */
-  text-align: center; /* Center text */
+  text-align: center;
+  color: white;
+  animation: gradientShift 10s ease infinite;
+  font-size: 2rem;
 }
 
-.clerkool {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+/* Song Screen Styles */
+.song-screen {
+  background: linear-gradient(135deg, #eeb0d5, #db8bbb, #db71b1);
+  background-size: 200% 200%;
+  min-height: 100vh;
+  padding: 2rem;
+  color: white;
+  animation: gradientShift 10s ease infinite;
+}
+
+.song-screen audio {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+  display: block;
+}
+
+.toggle-blanks-btn {
+  background-color: #ffffff;
+  color: #333;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-bottom: 2rem;
+}
+
+.toggle-blanks-btn:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.05);
+}
+
+.lyrics-display {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.lyrics-display p {
+  margin-bottom: 1rem;
+  transition: color 0.3s ease;
+}
+
+/* Styles for current and dimmed lines */
+.current-line {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.dimmed-line {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Styles for the blank inputs */
+.blank-input {
+  width: 80px;
+  padding: 5px;
+  font-size: 1rem;
+  margin-right: 5px;
+  border: none;
+  border-bottom: 2px solid #fff;
+  background: transparent;
+  color: #fff;
+  outline: none;
+  transition: border-bottom-color 0.3s ease;
+}
+
+.blank-input.correct {
+  border-bottom-color: #a8e6cf; /* Green */
+}
+
+.blank-input.incorrect {
+  border-bottom-color: #ff8b94; /* Red */
 }
