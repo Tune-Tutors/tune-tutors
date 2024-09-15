@@ -1,12 +1,13 @@
 /* App.css */
 
 .App {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   color: #333;
 }
 
+/* Navbar Styling */
 .navbar {
-  background-color: #333;
+  background-color: #000000;
   color: white;
   padding: 1rem;
   display: flex;
@@ -36,13 +37,15 @@
 }
 
 .nav-links a:hover {
-  text-decoration: underline;
+  color: #db71b1;
+  transition: color 0.2s;
 }
 
+/* Hero Section Styling */
 .hero {
   background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+  padding: 50px;
   text-align: center;
-  padding: 4rem 1rem;
   border-radius: 8px;
 }
 
@@ -57,31 +60,49 @@
 }
 
 .navigate-btn {
-  background-color: #007bff;
+  background-color: #bc5091;
   color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 5px;
+  padding: 20px 30px;
+  border-radius: 10px;
   text-decoration: none;
-  font-size: 1rem;
+  font-size: 1.5em;
+  transition: background-color 0.3s ease;
   display: inline-block;
-  transition: background-color 0.3s, transform 0.3s;
 }
 
 .navigate-btn:hover {
-  background-color: #0056b3;
+  background-color: #e8afd1;
   transform: scale(1.05);
 }
 
+/* Features Section Styling */
 .features {
-  background-color: #f9f9f9;
-  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #eeb0d5, #db8bbb, #db71b1); /* Gradient colors */
+  background-size: 600% 600%; /* Ensures a smooth gradient transition */
+  padding: 40px 20px;
+  margin-top: 20px;
+  animation: gradientShift 5s ease infinite; /* Animation for the gradient */
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
 }
 
 .features h2 {
   text-align: center;
+  font-size: xx-large;
   margin-bottom: 1.5rem;
 }
 
+/* Feature List Container */
 .feature-list {
   display: flex;
   flex-wrap: wrap;
@@ -89,20 +110,24 @@
   justify-content: center;
 }
 
+/* Feature Item Styling */
 .feature-item {
-  background: white;
-  border-radius: 8px;
-  padding: 1.5rem;
   width: 300px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  background-color: white;
+  overflow: hidden; /* Prevent text overflow from breaking the layout */
 }
 
 .feature-item h3 {
   margin-bottom: 0.5rem;
 }
 
+/* Footer Styling */
 .footer {
-  background-color: #333;
+  background-color: #000000;
   color: white;
   text-align: center;
   padding: 1rem;
@@ -125,5 +150,6 @@
 }
 
 .footer-links a:hover {
-  text-decoration: underline;
+  color: #db71b1;
+  transition: color 0.2s;
 }

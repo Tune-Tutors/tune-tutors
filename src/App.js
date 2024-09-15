@@ -35,42 +35,38 @@ const Home = () => (
 
 const Navbar = () => (
   <nav className="navbar">
-    <div className="logo">TuneTutors</div>
+    <div className="logo">TuneTutor</div>
     <ul className="nav-links">
-      <li><a href="#features">Features</a></li>
+      <li><a href="#future">Futures</a></li>
       <li><a href="#about">About Us</a></li>
       <li><a href="#contact">Contact</a></li>
-      <li><a href="/math">Math</a></li>
-      <li><a href="/english">English</a></li>
-      <li><a href="/history">History</a></li>
-      <li><a href="/science">Science</a></li>
     </ul>
   </nav>
 );
 
 const Hero = () => (
   <section className="hero">
-    <h1>Revolutionize Your Learning Through Music</h1>
-    <p>Meet MusicAI, the intelligent music tutor that helps you create songs based on any topic.</p>
-    <a href="/new-page" className="navigate-btn">Explore Features</a>
+    <h1>Changing Education's Status Quo Through Music</h1>
+    <p>Meet TuneTutor, the intelligent music guru and teacher that helps you create songs based on any topic.</p>
+    <a href="/new-page" className="navigate-btn">Dive in</a>
   </section>
 );
 
 const Features = () => (
   <section id="features" className="features">
-    <h2>Why TuneTutors?</h2>
+    <h2>Why Us?</h2>
     <div className="feature-list">
       <div className="feature-item">
-        <h3>Personalized Learning</h3>
-        <p>AI-driven lessons tailored to your skill level and progress.</p>
+        <h3>Unique Learning</h3>
+        <p>AI-driven music for you to master your subject of choice.</p>
       </div>
       <div className="feature-item">
-        <h3>Instant Feedback</h3>
-        <p>Get real-time feedback on your performances and improve faster.</p>
+        <h3>Auditory Emphasis</h3>
+        <p>Providing new solutions for the visually impaired or auditory learners.</p>
       </div>
       <div className="feature-item">
         <h3>Interactive Exercises</h3>
-        <p>Engaging exercises to help you practice and master new techniques.</p>
+        <p>Engaging exercises to test your knowledge and build your skillset.</p>
       </div>
     </div>
   </section>
@@ -78,7 +74,7 @@ const Features = () => (
 
 const Footer = () => (
   <footer className="footer">
-    <p>&copy; 2024 TuneTutors | Empowering education through AI</p>
+    <p>&copy; 2024 TuneTutor | Empowering education through AI</p>
     <ul className="footer-links">
       <li><a href="#terms">Terms of Service</a></li>
       <li><a href="#privacy">Privacy Policy</a></li>

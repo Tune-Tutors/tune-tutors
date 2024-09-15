@@ -5,7 +5,7 @@ import './NewPage.css';
 
 const NewPage = () => (
   <div className="new-page">
-    <h1>Explore More Features</h1>
+    <h1>Explore A Subject</h1>
     <div className="button-container">
       <Link to="/search/Math" className="feature-btn">Math</Link>
       <Link to="/search/English" className="feature-btn">English</Link>

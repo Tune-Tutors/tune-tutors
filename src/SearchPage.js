@@ -12,7 +12,7 @@ const SearchPage = ({ subject }) => {
 
   return (
     <div className="search-page">
-      <h1>{subject} Search</h1>
+      <h1>Choose a {subject} Topic</h1>
       <form onSubmit={handleSearch} className="search-form">
         <input
           type="text"
