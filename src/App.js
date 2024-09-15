@@ -4,6 +4,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Link,
   useParams,
 } from "react-router-dom";
 import {
@@ -182,8 +183,6 @@ const Home = () => (
     <Footer />
   </>
 );
-
-// Hero Component
 const Hero = () => (
   <section className="hero">
     <h1>Changing Education's Status Quo Through Music</h1>
@@ -191,11 +190,12 @@ const Hero = () => (
       Meet TuneTutor, the intelligent music guru that helps you create songs
       based on any topic.
     </p>
-    <a href="/search" className="navigate-btn">
+    <Link to="/search" className="navigate-btn">
       Dive In
-    </a>
+    </Link>
   </section>
 );
+
 
 // Features Component
 const Features = () => (
@@ -238,7 +238,6 @@ const Footer = () => (
   </footer>
 );
 
-
 // SearchPage Component
 const SearchPage = ({ subject }) => {
   const [query, setQuery] = useState("");
@@ -246,6 +245,7 @@ const SearchPage = ({ subject }) => {
   const [songData, setSongData] = useState(null);
   const [showBlanks, setShowBlanks] = useState(false);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [category, setCategory] = useState(subject || "Math");
   const audioRef = useRef(null);
 
   const handleSearch = async (e) => {
@@ -431,13 +431,58 @@ const SearchPage = ({ subject }) => {
 
   return (
     <div className="search-page">
-      <h1>Choose Your {subject} Topic</h1>
+      <h1>Generate Your Learning Song</h1>
       <form onSubmit={handleSearch} className="search-form">
+        <div className="category-selection">
+          <label>Select a Category:</label>
+          <div className="category-options">
+            <label>
+              <input
+                type="radio"
+                name="category"
+                value="Math"
+                checked={category === "Math"}
+                onChange={(e) => setCategory(e.target.value)}
+              />
+              Math
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="category"
+                value="English"
+                checked={category === "English"}
+                onChange={(e) => setCategory(e.target.value)}
+              />
+              English
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="category"
+                value="Science"
+                checked={category === "Science"}
+                onChange={(e) => setCategory(e.target.value)}
+              />
+              Science
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="category"
+                value="History"
+                checked={category === "History"}
+                onChange={(e) => setCategory(e.target.value)}
+              />
+              History
+            </label>
+          </div>
+        </div>
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder={`Search ${subject}`}
+          placeholder={`Enter a topic in ${category}`}
           className="search-input"
           required
         />
@@ -447,7 +492,9 @@ const SearchPage = ({ subject }) => {
       </form>
     </div>
   );
-};const SearchPageWrapper = () => {
+};
+
+const SearchPageWrapper = () => {
   const { subject } = useParams();
   // Default subject if none is provided
   const defaultSubject = subject || "General";
