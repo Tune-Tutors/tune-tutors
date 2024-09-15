@@ -1,0 +1,24 @@
+/* NewPage.css */
+.new-page {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .feature-btn {
+    padding: 10px 20px;
+    background-color: #e1cb4f;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .feature-btn:hover {
+    background-color: #ebeb44;
+  }

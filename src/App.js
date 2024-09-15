@@ -1,19 +1,37 @@
-// App.js
-import React, { useState } from 'react';
-import './App.css'; // Your existing styles
-import BackgroundCanvas from './BackgroundCanvas';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, useParams } from 'react-router-dom'; // Import useParams
+import './App.css';
+import NewPage from './NewPage';
+import SearchPage from './SearchPage'; // Import the SearchPage component
+
 
 function App() {
   return (
-    <div className="App">
-      <BackgroundCanvas />
-      <Navbar />
-      <Hero />
-      <Features />
-      <Footer />
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/new-page" element={<NewPage />} />
+          <Route path="/search/:subject" element={<SearchPageWrapper />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
+
+const SearchPageWrapper = () => {
+  const { subject } = useParams();
+  return <SearchPage subject={subject} />;
+};
+
+const Home = () => (
+  <>
+    <Navbar />
+    <Hero />
+    <Features />
+    <Footer />
+  </>
+);
 
 const Navbar = () => (
   <nav className="navbar">
@@ -22,39 +40,21 @@ const Navbar = () => (
       <li><a href="#features">Features</a></li>
       <li><a href="#about">About Us</a></li>
       <li><a href="#contact">Contact</a></li>
+      <li><a href="/math">Math</a></li>
+      <li><a href="/english">English</a></li>
+      <li><a href="/history">History</a></li>
+      <li><a href="/science">Science</a></li>
     </ul>
   </nav>
 );
 
-const Hero = () => {
-  const [songTopic, setSongTopic] = useState('');
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // Logic for handling the input topic and song generation can go here
-    alert(`Creating a song about: ${songTopic}`);
-    //Pass on SongTopic to Suno
-  };
-
-  return (
-    <section className="hero">
-      <h1>Revolutionize Your Learning Through Music</h1>
-      <p>Meet MusicAI, the intelligent music tutor that helps you create songs based on any topic.</p>
-
-      {/* Search Bar */}
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          placeholder="Enter a topic to create a song"
-          value={songTopic}
-          onChange={(e) => setSongTopic(e.target.value)}
-          className="search-input"
-        />
-        <button type="submit" className="search-btn">Create Song</button>
-      </form>
-    </section>
-  );
-};
+const Hero = () => (
+  <section className="hero">
+    <h1>Revolutionize Your Learning Through Music</h1>
+    <p>Meet MusicAI, the intelligent music tutor that helps you create songs based on any topic.</p>
+    <a href="/new-page" className="navigate-btn">Explore Features</a>
+  </section>
+);
 
 const Features = () => (
   <section id="features" className="features">
@@ -85,5 +85,10 @@ const Footer = () => (
     </ul>
   </footer>
 );
+
+const Math = () => <div>Math Content</div>;
+const English = () => <div>English Content</div>;
+const History = () => <div>History Content</div>;
+const Science = () => <div>Science Content</div>;
 
 export default App;
