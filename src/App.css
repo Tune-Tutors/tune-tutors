@@ -636,9 +636,6 @@ html {
   transform: scale(1.05);
 }
 
-/* Existing styles for loading-screen, song-screen, etc. */
-
-/* Gradient animation */
 @keyframes gradientShift {
   0% {
     background-position: 0% 0%;
@@ -649,4 +646,101 @@ html {
   100% {
     background-position: 0% 0%;
   }
+}
+
+.category-options {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.category-btn {
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.category-btn.active {
+  background-color: #db71b1; /* Your primary color */
+  color: #fff;
+}
+
+.category-btn:hover {
+  background-color: #db71b1;
+  color: #fff;
+}
+
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit; /* Inherit color from parent */
+}
+
+.logo:hover {
+  text-decoration: underline;
+}
+
+.category-options {
+  display: flex;
+  justify-content: center; /* Centers the buttons horizontally */
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.category-btn {
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  border: 2px solid #db71b1;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.category-btn.active,
+.category-btn:hover {
+  background-color: #db71b1;
+  color: #fff;
+}
+
+.lyrics-display {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.lyrics-display p {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.current-line {
+  font-weight: bold;
+}
+
+.dimmed-line {
+  color: #888;
+}
+
+.blank-input {
+  width: 80px;
+  padding: 5px;
+  font-size: 16px;
+  text-align: center;
+  margin: 0 2px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+}
+
+.blank-input.correct {
+  border-color: #28a745; /* Green border for correct answer */
+  background-color: #d4edda; /* Light green background */
+}
+
+.blank-input.incorrect {
+  border-color: #dc3545; /* Red border for incorrect answer */
+  background-color: #f8d7da; /* Light red background */
 }

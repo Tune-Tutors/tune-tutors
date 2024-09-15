@@ -238,7 +238,7 @@ const Footer = () => (
   </footer>
 );
 
-// SearchPage Component
+
 const SearchPage = ({ subject }) => {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
@@ -246,6 +246,7 @@ const SearchPage = ({ subject }) => {
   const [showBlanks, setShowBlanks] = useState(false);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [category, setCategory] = useState(subject || "Math");
+  const [allBlanksFilled, setAllBlanksFilled] = useState(false);
   const audioRef = useRef(null);
 
   const handleSearch = async (e) => {
@@ -307,16 +308,74 @@ const SearchPage = ({ subject }) => {
   const handleKeyDown = (e, lineIndex, wordIndex) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      setSongData((prevData) => {
-        const newLyrics = [...prevData.lyrics];
-        const wordObj = newLyrics[lineIndex].words[wordIndex];
-        const isCorrect =
-          wordObj.userInput.trim().toLowerCase() ===
-          wordObj.word.trim().toLowerCase();
-        wordObj.isCorrect = isCorrect;
-        return { ...prevData, lyrics: newLyrics };
-      });
+      const wordObj = songData.lyrics[lineIndex].words[wordIndex];
+      const isCorrect =
+        wordObj.userInput.trim().toLowerCase() ===
+        wordObj.word.trim().toLowerCase();
+      if (isCorrect) {
+        wordObj.isCorrect = true;
+
+        // Move to the next blank
+        moveToNextBlank(lineIndex, wordIndex);
+      } else {
+        wordObj.isCorrect = false;
+      }
+      setSongData({ ...songData });
     }
+  };
+
+  const moveToNextBlank = (currentLineIndex, currentWordIndex) => {
+    let nextLineIndex = currentLineIndex;
+    let nextWordIndex = currentWordIndex + 1;
+
+    // Find the next blank in the current line
+    while (
+      nextWordIndex < songData.lyrics[nextLineIndex].words.length &&
+      !songData.lyrics[nextLineIndex].words[nextWordIndex].isBlank
+    ) {
+      nextWordIndex++;
+    }
+
+    // If no more blanks in current line, move to the next line
+    while (
+      nextWordIndex >= songData.lyrics[nextLineIndex].words.length &&
+      nextLineIndex < songData.lyrics.length - 1
+    ) {
+      nextLineIndex++;
+      nextWordIndex = 0;
+      // Find the next blank in the new line
+      while (
+        nextWordIndex < songData.lyrics[nextLineIndex].words.length &&
+        !songData.lyrics[nextLineIndex].words[nextWordIndex].isBlank
+      ) {
+        nextWordIndex++;
+      }
+    }
+
+    // If a next blank is found, focus on it
+    if (
+      nextLineIndex < songData.lyrics.length &&
+      nextWordIndex < songData.lyrics[nextLineIndex].words.length &&
+      songData.lyrics[nextLineIndex].words[nextWordIndex].isBlank &&
+      !songData.lyrics[nextLineIndex].words[nextWordIndex].isCorrect
+    ) {
+      // Focus on the next input
+      const inputId = `input-${nextLineIndex}-${nextWordIndex}`;
+      const nextInput = document.getElementById(inputId);
+      if (nextInput) {
+        nextInput.focus();
+      }
+    } else {
+      // All blanks are filled
+      setAllBlanksFilled(true);
+    }
+  };
+
+  const restartSong = () => {
+    setSongData(null);
+    setQuery("");
+    setAllBlanksFilled(false);
+    setCurrentLineIndex(0);
   };
 
   useEffect(() => {
@@ -368,6 +427,17 @@ const SearchPage = ({ subject }) => {
     return <div className="loading-screen">Loading...</div>;
   }
 
+  if (allBlanksFilled) {
+    return (
+      <div className="song-screen">
+        <h2>Congratulations! You've completed the song.</h2>
+        <button onClick={restartSong} className="restart-btn">
+          Restart
+        </button>
+      </div>
+    );
+  }
+
   if (songData) {
     return (
       <div className="song-screen">
@@ -399,6 +469,7 @@ const SearchPage = ({ subject }) => {
                         <input
                           type="text"
                           key={wordIdx}
+                          id={`input-${index}-${wordIdx}`}
                           value={wordObj.userInput}
                           onChange={(e) =>
                             handleUserInput(index, wordIdx, e.target.value)
@@ -415,7 +486,11 @@ const SearchPage = ({ subject }) => {
                         />
                       );
                     } else {
-                      return <span key={wordIdx}>_____ </span>;
+                      return (
+                        <span key={wordIdx} className="blank-space">
+                          _____{" "}
+                        </span>
+                      );
                     }
                   } else {
                     return <span key={wordIdx}>{wordObj.word} </span>;
@@ -436,46 +511,40 @@ const SearchPage = ({ subject }) => {
         <div className="category-selection">
           <label>Select a Category:</label>
           <div className="category-options">
-            <label>
-              <input
-                type="radio"
-                name="category"
-                value="Math"
-                checked={category === "Math"}
-                onChange={(e) => setCategory(e.target.value)}
-              />
+            <button
+              type="button"
+              className={`category-btn ${category === "Math" ? "active" : ""}`}
+              onClick={() => setCategory("Math")}
+            >
               Math
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="category"
-                value="English"
-                checked={category === "English"}
-                onChange={(e) => setCategory(e.target.value)}
-              />
+            </button>
+            <button
+              type="button"
+              className={`category-btn ${
+                category === "English" ? "active" : ""
+              }`}
+              onClick={() => setCategory("English")}
+            >
               English
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="category"
-                value="Science"
-                checked={category === "Science"}
-                onChange={(e) => setCategory(e.target.value)}
-              />
+            </button>
+            <button
+              type="button"
+              className={`category-btn ${
+                category === "Science" ? "active" : ""
+              }`}
+              onClick={() => setCategory("Science")}
+            >
               Science
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="category"
-                value="History"
-                checked={category === "History"}
-                onChange={(e) => setCategory(e.target.value)}
-              />
+            </button>
+            <button
+              type="button"
+              className={`category-btn ${
+                category === "History" ? "active" : ""
+              }`}
+              onClick={() => setCategory("History")}
+            >
               History
-            </label>
+            </button>
           </div>
         </div>
         <input
@@ -493,6 +562,7 @@ const SearchPage = ({ subject }) => {
     </div>
   );
 };
+
 
 const SearchPageWrapper = () => {
   const { subject } = useParams();
