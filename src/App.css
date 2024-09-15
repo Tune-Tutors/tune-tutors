@@ -751,11 +751,6 @@ a {
   color:inherit;
 }
 
-.missed-word {
-  color: red;
-  text-decoration: line-through;
-}
-
 .incorrect {
   border-color: red;
 }
@@ -763,3 +758,61 @@ a {
 .correct {
   border-color: green;
 }
+
+.missed-word {
+  color: red;
+  text-decoration: line-through;
+  font-weight: bold;
+}
+
+/* Style for incorrect input */
+.blank-input.incorrect {
+  border-color: red;
+}
+
+/* Style for correct input */
+.blank-input.correct {
+  border-color: green;
+}
+
+/* Style for the blank space */
+.blank-space {
+  display: inline-block;
+  width: 60px; /* Adjust as needed */
+  border-bottom: 1px solid #ccc;
+  margin: 0 2px;
+}
+
+/* Style for the current line */
+.current-line {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+/* Style for the next line */
+.next-line {
+  font-size: 1em;
+}
+
+/* Style for the input fields */
+.blank-input {
+  width: 60px; /* Adjust as needed */
+  margin: 0 2px;
+}
+
+/* Style for the restart button */
+.restart-btn {
+  background-color: #db71b1; /* Adjust as needed */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-top: 20px;
+  border-radius: 5px;
+}
+
+.restart-btn:hover {
+  background-color: #c460a1; /* Slightly darker on hover */
+}
+

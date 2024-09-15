@@ -238,14 +238,16 @@ const Footer = () => (
   </footer>
 );
 
+
 const SearchPage = ({ subject }) => {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [songData, setSongData] = useState(null);
   const [showBlanks, setShowBlanks] = useState(false);
+  const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [category, setCategory] = useState(subject || "Math");
-  const [allBlanksFilled, setAllBlanksFilled] = useState(false);
+  const [allVersesCompleted, setAllVersesCompleted] = useState(false);
   const audioRef = useRef(null);
 
   const numLinesToShow = 2; // Number of lines to show at a time
@@ -271,138 +273,190 @@ const SearchPage = ({ subject }) => {
       return [];
     }
 
-    // Split lyrics string into lines based on newlines
+    // Split lyrics into lines
     const lines = lyricsText.split("\n").filter((line) => line.trim() !== "");
 
-    return lines.map((line) => {
-      const words = line.split(" ");
-      const numBlanks = Math.ceil(words.length * 0.3); // 30% blanks
-      const indices = [];
-      while (indices.length < numBlanks) {
-        const idx = Math.floor(Math.random() * words.length);
-        if (!indices.includes(idx)) {
-          indices.push(idx);
+    // Initialize an array to hold verses
+    const verses = [];
+    let currentVerse = [];
+
+    lines.forEach((line) => {
+      if (
+        line.toLowerCase().includes("verse") ||
+        line.toLowerCase().includes("chorus")
+      ) {
+        // If line contains "Verse" or "Chorus", start a new verse
+        if (currentVerse.length > 0) {
+          verses.push(currentVerse);
+          currentVerse = [];
         }
+      } else {
+        currentVerse.push(line);
       }
-      const newWords = words.map((word, idx) => ({
-        word,
-        isBlank: indices.includes(idx),
-        userInput: "",
-        isCorrect: null, // To track correctness
-        attempts: 0, // Initialize attempts
-      }));
-      return { text: line, words: newWords };
     });
+
+    // Add the last verse if not empty
+    if (currentVerse.length > 0) {
+      verses.push(currentVerse);
+    }
+
+    // Now process each verse
+    const processedVerses = verses.map((verse) => {
+      return verse.map((line) => {
+        const words = line.split(" ");
+        const numBlanks = Math.ceil(words.length * 0.3); // 30% blanks
+        const indices = [];
+        while (indices.length < numBlanks) {
+          const idx = Math.floor(Math.random() * words.length);
+          if (!indices.includes(idx)) {
+            indices.push(idx);
+          }
+        }
+        const newWords = words.map((word, idx) => ({
+          word,
+          isBlank: indices.includes(idx),
+          userInput: "",
+          isCorrect: null, // To track correctness
+          attempts: 0, // Initialize attempts
+        }));
+        return { text: line, words: newWords };
+      });
+    });
+
+    return processedVerses;
   };
 
   const toggleBlanks = () => {
     setShowBlanks(!showBlanks);
   };
 
-  const handleUserInput = (lineIndex, wordIndex, value) => {
+  const handleUserInput = (verseIndex, lineIndex, wordIndex, value) => {
     setSongData((prevData) => {
-      const newLyrics = [...prevData.lyrics];
-      newLyrics[lineIndex].words[wordIndex].userInput = value;
+      const newLyrics = JSON.parse(JSON.stringify(prevData.lyrics));
+      newLyrics[verseIndex][lineIndex].words[wordIndex].userInput = value;
       return { ...prevData, lyrics: newLyrics };
     });
   };
 
-  const handleKeyDown = (e, lineIndex, wordIndex) => {
+  const handleKeyDown = (e, verseIndex, lineIndex, wordIndex) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      const wordObj = songData.lyrics[lineIndex].words[wordIndex];
-      const isCorrect =
-        wordObj.userInput.trim().toLowerCase() ===
-        wordObj.word.trim().toLowerCase();
-      if (isCorrect) {
-        wordObj.isCorrect = true;
 
-        // Move to the next blank
-        moveToNextBlank(lineIndex, wordIndex);
-      } else {
-        wordObj.attempts += 1; // Increment attempts
-        wordObj.isCorrect = false; // To trigger incorrect styling
-        if (wordObj.attempts >= 2) {
-          // Reveal the correct word
-          wordObj.userInput = wordObj.word;
-          wordObj.isCorrect = true; // Mark as correct to prevent further editing
-          moveToNextBlank(lineIndex, wordIndex);
+      // Use functional setState to ensure we're working with the latest state
+      setSongData((prevSongData) => {
+        // Clone the previous songData to avoid mutating state directly
+        const newSongData = JSON.parse(JSON.stringify(prevSongData));
+        const wordObj =
+          newSongData.lyrics[verseIndex][lineIndex].words[wordIndex];
+        const isCorrect =
+          wordObj.userInput.trim().toLowerCase() ===
+          wordObj.word.trim().toLowerCase();
+
+        if (isCorrect) {
+          wordObj.isCorrect = true;
+        } else {
+          wordObj.attempts += 1;
+          wordObj.isCorrect = false;
+          if (wordObj.attempts >= 2) {
+            wordObj.userInput = wordObj.word;
+            wordObj.isCorrect = true;
+          }
         }
-      }
-      setSongData({ ...songData });
 
-      // Check if all blanks in the current line are filled or attempts exhausted
-      const currentLine = songData.lyrics[lineIndex];
-      const allBlanksInLineFilled = currentLine.words.every(
-        (word) =>
-          !word.isBlank || word.isCorrect === true || word.attempts >= 2
-      );
-      if (allBlanksInLineFilled) {
-        // Move to the next line
-        setCurrentLineIndex((prevIndex) => prevIndex + 1);
-      }
+        // Now, check if all blanks in the current line are filled
+        const currentLine = newSongData.lyrics[verseIndex][lineIndex];
+        const allBlanksInLineFilled = currentLine.words.every(
+          (word) =>
+            !word.isBlank || word.isCorrect === true || word.attempts >= 2
+        );
+
+        if (allBlanksInLineFilled) {
+          const isLastLineInVerse =
+            lineIndex >= newSongData.lyrics[verseIndex].length - 1;
+          if (isLastLineInVerse) {
+            // Check if all verses are completed
+            checkIfVerseCompleted(verseIndex, newSongData);
+          } else {
+            // Move to the next line
+            setCurrentLineIndex((prevIndex) => prevIndex + 1);
+          }
+        } else {
+          // Move to next blank in the current line
+          moveToNextBlank(verseIndex, lineIndex, wordIndex, newSongData);
+        }
+
+        return newSongData;
+      });
     }
   };
 
-  const moveToNextBlank = (currentLineIndex, currentWordIndex) => {
-    let nextLineIndex = currentLineIndex;
-    let nextWordIndex = currentWordIndex + 1;
+  const moveToNextBlank = (
+    verseIndex,
+    lineIndex,
+    wordIndex,
+    updatedSongData
+  ) => {
+    const songDataToUse = updatedSongData || songData;
+    let vIndex = verseIndex;
+    let lIndex = lineIndex;
+    let wIndex = wordIndex + 1;
 
     // Find the next blank in the current line
     while (
-      nextWordIndex < songData.lyrics[nextLineIndex].words.length &&
-      (!songData.lyrics[nextLineIndex].words[nextWordIndex].isBlank ||
-        songData.lyrics[nextLineIndex].words[nextWordIndex].isCorrect === true)
+      wIndex < songDataToUse.lyrics[vIndex][lIndex].words.length &&
+      (!songDataToUse.lyrics[vIndex][lIndex].words[wIndex].isBlank ||
+        songDataToUse.lyrics[vIndex][lIndex].words[wIndex].isCorrect === true)
     ) {
-      nextWordIndex++;
+      wIndex++;
     }
 
-    // If no more blanks in current line
-    if (nextWordIndex >= songData.lyrics[nextLineIndex].words.length) {
-      // Check if all blanks are filled in the current line
-      const currentLine = songData.lyrics[currentLineIndex];
-      const allBlanksInLineFilled = currentLine.words.every(
-        (word) =>
-          !word.isBlank || word.isCorrect === true || word.attempts >= 2
-      );
-      if (allBlanksInLineFilled) {
-        // Move to the next line
-        setCurrentLineIndex((prevIndex) => prevIndex + 1);
-      }
-      return;
-    }
-
-    // If a next blank is found, focus on it
+    // If a next blank is found in the current line, focus on it
     if (
-      nextLineIndex < songData.lyrics.length &&
-      nextWordIndex < songData.lyrics[nextLineIndex].words.length &&
-      songData.lyrics[nextLineIndex].words[nextWordIndex].isBlank &&
-      songData.lyrics[nextLineIndex].words[nextWordIndex].isCorrect !== true
+      wIndex < songDataToUse.lyrics[vIndex][lIndex].words.length &&
+      songDataToUse.lyrics[vIndex][lIndex].words[wIndex].isBlank &&
+      songDataToUse.lyrics[vIndex][lIndex].words[wIndex].isCorrect !== true
     ) {
       // Focus on the next input
-      const inputId = `input-${nextLineIndex}-${nextWordIndex}`;
+      const inputId = `input-${vIndex}-${lIndex}-${wIndex}`;
       const nextInput = document.getElementById(inputId);
       if (nextInput) {
         nextInput.focus();
       }
     } else {
-      // Check if all blanks are filled or attempts are exhausted
-      const allFilled = songData.lyrics.every((line) =>
-        line.words.every(
-          (word) =>
-            !word.isBlank || word.isCorrect === true || word.attempts >= 2
-        )
-      );
-      if (allFilled) {
-        setAllBlanksFilled(true);
+      // No more blanks in the current line
+      // Do nothing; handleKeyDown will manage moving to the next line when appropriate
+    }
+  };
+
+  const checkIfVerseCompleted = (verseIndex, updatedSongData) => {
+    const songDataToUse = updatedSongData || songData;
+    const currentVerse = songDataToUse.lyrics[verseIndex];
+    const allBlanksInVerseFilled = currentVerse.every((line) =>
+      line.words.every(
+        (word) =>
+          !word.isBlank || word.isCorrect === true || word.attempts >= 2
+      )
+    );
+    if (allBlanksInVerseFilled) {
+      if (verseIndex + 1 < songDataToUse.lyrics.length) {
+        // Move to the next verse
+        setCurrentVerseIndex(verseIndex + 1);
+        setCurrentLineIndex(0);
+      } else {
+        // All verses completed
+        setAllVersesCompleted(true);
       }
+    } else {
+      // Reset currentLineIndex to 0 for the next verse
+      setCurrentLineIndex(0);
     }
   };
 
   const restartSong = () => {
     setSongData(null);
     setQuery("");
-    setAllBlanksFilled(false);
+    setAllVersesCompleted(false);
+    setCurrentVerseIndex(0);
     setCurrentLineIndex(0);
   };
 
@@ -417,46 +471,23 @@ const SearchPage = ({ subject }) => {
           // Optionally, prompt the user to click a play button
         });
 
-        const duration = audio.duration;
-        const timePerLine = duration / songData.lyrics.length;
-
-        const newLyrics = songData.lyrics.map((line, index) => ({
-          ...line,
-          startTime: index * timePerLine,
-          endTime: (index + 1) * timePerLine,
-        }));
-
-        setSongData((prevData) => ({
-          ...prevData,
-          lyrics: newLyrics,
-        }));
-      };
-
-      const updateLyrics = () => {
-        const currentTime = audio.currentTime;
-        const index = songData.lyrics.findIndex(
-          (line) => line.endTime > currentTime
-        );
-        if (index !== -1 && index !== currentLineIndex) {
-          setCurrentLineIndex(index);
-        }
+        // Optionally, you can set up audio synchronization here
+        // For now, we'll skip updating currentLineIndex based on audio time
       };
 
       audio.addEventListener("loadedmetadata", handleAudioLoaded);
-      audio.addEventListener("timeupdate", updateLyrics);
+
       return () => {
         audio.removeEventListener("loadedmetadata", handleAudioLoaded);
-        audio.removeEventListener("timeupdate", updateLyrics);
       };
     }
-  }, [audioRef, songData, currentLineIndex]);
+  }, [audioRef, songData]);
 
   if (loading) {
     return <div className="loading-screen">Loading...</div>;
   }
 
-  // **Add a check to ensure songData is not null before accessing songData.lyrics**
-  if (songData && (allBlanksFilled || currentLineIndex >= songData.lyrics.length)) {
+  if (allVersesCompleted) {
     return (
       <div className="song-screen">
         <h2>Congratulations! You've completed the song.</h2>
@@ -475,7 +506,7 @@ const SearchPage = ({ subject }) => {
           {showBlanks ? "Show Full Lyrics" : "Fill in the Blanks"}
         </button>
         <div className="lyrics-display">
-          {songData.lyrics.map((line, index) => {
+          {songData.lyrics[currentVerseIndex].map((line, index) => {
             // Only show lines from currentLineIndex to currentLineIndex + numLinesToShow - 1
             if (
               index < currentLineIndex ||
@@ -509,12 +540,24 @@ const SearchPage = ({ subject }) => {
                         <input
                           type="text"
                           key={wordIdx}
-                          id={`input-${index}-${wordIdx}`}
+                          id={`input-${currentVerseIndex}-${index}-${wordIdx}`}
                           value={wordObj.userInput}
                           onChange={(e) =>
-                            handleUserInput(index, wordIdx, e.target.value)
+                            handleUserInput(
+                              currentVerseIndex,
+                              index,
+                              wordIdx,
+                              e.target.value
+                            )
                           }
-                          onKeyDown={(e) => handleKeyDown(e, index, wordIdx)}
+                          onKeyDown={(e) =>
+                            handleKeyDown(
+                              e,
+                              currentVerseIndex,
+                              index,
+                              wordIdx
+                            )
+                          }
                           className={`blank-input ${
                             wordObj.isCorrect === true
                               ? "correct"
@@ -576,6 +619,7 @@ const SearchPage = ({ subject }) => {
             >
               Science
             </button>
+           
             <button
               type="button"
               className={`category-btn ${
@@ -602,7 +646,6 @@ const SearchPage = ({ subject }) => {
     </div>
   );
 };
-
 
 
 const SearchPageWrapper = () => {
